@@ -55,6 +55,10 @@ export default function NewTicketPage() {
   const createMutation = useMutation({
     mutationFn: createTicket,
     onSuccess: (ticket) => {
+      if (!ticket.id) {
+        setError("Chamado criado, mas o ID nao foi retornado pela API.");
+        return;
+      }
       navigate(`/chamados/${ticket.id}`);
     },
     onError: () => {

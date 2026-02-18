@@ -3,9 +3,11 @@ Views for tickets and ticket messages.
 """
 
 import logging
+from uuid import UUID
 
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -200,6 +202,10 @@ class TicketMessageListCreateView(generics.ListCreateAPIView):
             base_qs = qs.filter(ticket__created_by=user, is_internal=False)
 
         if ticket_id:
+            try:
+                UUID(str(ticket_id))
+            except (ValueError, TypeError):
+                raise ValidationError({"ticket": "ID de ticket invalido."})
             base_qs = base_qs.filter(ticket_id=ticket_id)
 
         return base_qs

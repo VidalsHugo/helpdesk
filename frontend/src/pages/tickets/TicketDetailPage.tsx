@@ -74,7 +74,12 @@ function statusBadgeVariant(status: TicketStatus): "default" | "secondary" | "de
 
 export default function TicketDetailPage() {
   const params = useParams();
-  const ticketId = params.id || "";
+  const ticketId = useMemo(() => {
+    const rawId = params.id;
+    if (!rawId || rawId === "undefined" || rawId === "null") return "";
+    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidPattern.test(rawId) ? rawId : "";
+  }, [params.id]);
   const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
 

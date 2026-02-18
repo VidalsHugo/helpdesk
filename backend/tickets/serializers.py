@@ -50,7 +50,8 @@ class TicketSerializer(serializers.ModelSerializer):
 class TicketCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = ("title", "description", "priority", "category")
+        fields = ("id", "title", "description", "priority", "category")
+        read_only_fields = ("id",)
         extra_kwargs = {
             "priority": {"required": False},
             "category": {"required": False},
